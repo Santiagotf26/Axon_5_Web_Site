@@ -502,11 +502,18 @@ export default function App() {
       {/* NAV */}
       <nav id="nav" className={navSolid ? 'solid' : ''}>
         <a href="#" className="nav-brand" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-          <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
-            <defs><linearGradient id="lg" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse"><stop stopColor="#22c55e" /><stop offset="1" stopColor="#15803d" /></linearGradient></defs>
-            <rect width="36" height="36" rx="8" fill="url(#lg)" />
-            <circle cx="18" cy="18" r="4" fill="rgba(0,0,0,.5)" />
-            <circle cx="18" cy="18" r="2" fill="white" />
+          <svg width="28" height="28" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="36" height="36" rx="10" fill="url(#brand-grad)" />
+            <path d="M12 18L18 12L24 18M18 12V24" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="12" cy="18" r="2.5" fill="white" />
+            <circle cx="24" cy="18" r="2.5" fill="white" />
+            <circle cx="18" cy="12" r="2.5" fill="white" />
+            <defs>
+              <linearGradient id="brand-grad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#4ade80" />
+                <stop offset="1" stopColor="#16a34a" />
+              </linearGradient>
+            </defs>
           </svg>
           <span className="nav-brand-name">Axon 5</span>
         </a>
@@ -860,11 +867,18 @@ export default function App() {
           <div className="ft-top">
             <div className="ft-brand">
               <a href="#" className="nav-brand" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-                <svg width="26" height="26" viewBox="0 0 36 36" fill="none">
-                  <defs><linearGradient id="fl" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse"><stop stopColor="#22c55e" /><stop offset="1" stopColor="#15803d" /></linearGradient></defs>
-                  <rect width="36" height="36" rx="8" fill="url(#fl)" />
-                  <circle cx="18" cy="18" r="4" fill="rgba(0,0,0,.5)" />
-                  <circle cx="18" cy="18" r="2" fill="white" />
+                <svg width="26" height="26" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="36" height="36" rx="10" fill="url(#brand-grad-ft)" />
+                  <path d="M12 18L18 12L24 18M18 12V24" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <circle cx="12" cy="18" r="2.5" fill="white" />
+                  <circle cx="24" cy="18" r="2.5" fill="white" />
+                  <circle cx="18" cy="12" r="2.5" fill="white" />
+                  <defs>
+                    <linearGradient id="brand-grad-ft" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#4ade80" />
+                      <stop offset="1" stopColor="#16a34a" />
+                    </linearGradient>
+                  </defs>
                 </svg>
                 <span className="nav-brand-name">Axon 5</span>
               </a>

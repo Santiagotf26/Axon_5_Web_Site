@@ -130,16 +130,19 @@ body::after {
 /* ─── NAV ──────────────────────────────────────────────── */
 #nav {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 20px;
+    left: 24px;
+    right: 24px;
+    max-width: 1032px;
+    margin: 0 auto;
     z-index: 1000;
     display: flex;
     align-items: center;
     padding: 0 32px;
     height: 60px;
-    border-bottom: 1px solid transparent;
-    transition: background .3s, border-color .3s, backdrop-filter .3s;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    transition: background .3s, border-color .3s, backdrop-filter .3s, box-shadow .3s;
 }
 
 #nav.solid {
@@ -147,6 +150,7 @@ body::after {
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
     border-color: var(--border);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .05);
 }
 
 .nav-brand {
@@ -265,22 +269,27 @@ body::after {
 
     #nav {
         padding: 0 18px;
+        left: 12px;
+        right: 12px;
+        top: 12px;
     }
 }
 
 /* MOBILE MENU */
 #mob-menu {
     position: fixed;
-    top: 60px;
-    left: 0;
-    right: 0;
+    top: 80px;
+    left: 12px;
+    right: 12px;
+    border-radius: 14px;
     z-index: 999;
     background: var(--mob-bg);
     backdrop-filter: blur(18px);
-    border-bottom: 1px solid var(--border);
+    border: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     padding: 12px 0;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, .1);
 }
 
 #mob-menu a {
@@ -1524,6 +1533,13 @@ footer {
     .ft-top {
         grid-template-columns: 1fr 1fr;
     }
+    .ft-brand {
+        grid-column: 1 / 3;
+        margin-bottom: 20px;
+    }
+    .ft-brand p {
+        max-width: 100%;
+    }
 }
 
 @media(max-width:440px) {
@@ -1613,6 +1629,20 @@ footer {
 .ft-leg {
     display: flex;
     gap: 16px;
+}
+
+@media(max-width:640px) {
+    .ft-bot {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        gap: 16px;
+        padding-top: 36px;
+    }
+    .ft-leg {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
 }
 
 .ft-leg a {
