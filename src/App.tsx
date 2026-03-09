@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, useMotionValue, AnimatePresence } from 'framer-motion';
+import BusinessLanding from './BusinessLanding';
 
 /* ─── DATA ─────────────────────────────────────────────── */
 const NAV_LINKS = [
@@ -68,9 +69,15 @@ const TESTIMONIALS = [
 
 const LOGOS = ['TechCorp', 'FinanceHub', 'ScaleAI', 'Cognition', 'DataFlow', 'NexusOps', 'CloudBase', 'VectorDB'];
 const INTEGRATIONS = [
-  { icon: '💬', name: 'Slack' }, { icon: '📋', name: 'Notion' }, { icon: '☁️', name: 'Salesforce' },
-  { icon: '🐙', name: 'GitHub' }, { icon: '⚡', name: 'Zapier' }, { icon: '📊', name: 'BigQuery' },
-  { icon: '🗄️', name: 'Postgres' }, { icon: '🔗', name: 'Webhook' }, { icon: '🔌', name: 'REST API' },
+  { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 13.5a3.5 3.5 0 0 0-3.5-3.5h-1v-2a3.5 3.5 0 0 0-7 0v2h-1a3.5 3.5 0 0 0-3.5 3.5 3.5 3.5 0 0 0 3.5 3.5h1v2h-1a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 3.5-3.5v-2h2v2a3.5 3.5 0 1 0 7 0 3.5 3.5 0 0 0-3.5-3.5h-1v-2h1a3.5 3.5 0 0 0 3.5-3.5z"/></svg>, name: 'Slack' },
+  { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>, name: 'Notion' },
+  { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17.5 19C19.9853 19 22 16.9853 22 14.5C22 12.1332 20.183 10.2053 17.8703 10.0271C17.4851 6.64322 14.6295 4 11.1667 4C7.48477 4 4.5 6.98477 4.5 10.6667C4.5 10.887 4.51065 11.1042 4.53139 11.3175C2.5522 11.8394 1 13.7226 1 15.9167C1 18.1708 2.82919 20 5.08333 20H17.5V19Z"/></svg>, name: 'Salesforce' },
+  { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>, name: 'GitHub' },
+  { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>, name: 'Zapier' },
+  { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>, name: 'BigQuery' },
+  { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>, name: 'Postgres' },
+  { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>, name: 'Webhook' },
+  { icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M8 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M16 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><line x1="9.4" y1="7.3" x2="14.6" y2="10.7"/><line x1="9.4" y1="16.7" x2="14.6" y2="13.3"/></svg>, name: 'REST API' },
 ];
 
 /* ─── HELPERS ───────────────────────────────────────────── */
@@ -239,14 +246,14 @@ function TabTerminal({ type }: { type: string }) {
 
 /* ─── CHAT ──────────────────────────────────────────────── */
 const CHAT_REPLIES: Record<string, string> = {
-  '¿Qué hace Axon 5?': 'Axon 5 automatiza flujos de trabajo con agentes de IA. Despliega en minutos, sin código. 🚀',
+  '¿Qué hace Axon 5?': 'Axon 5 automatiza flujos de trabajo con agentes de IA. Despliega en minutos, sin código.',
   '¿Cuánto cuesta?': 'Trial gratuito 14 días, sin tarjeta. Planes desde $49/mes.',
-  'Quiero una demo': '¡Perfecto! Deja tu email y te contactamos en menos de 24h. 📅',
+  'Quiero una demo': '¡Perfecto! Deja tu email y te contactamos en menos de 24h.',
 };
 
 function Chat() {
   const [open, setOpen] = useState(false);
-  const [msgs, setMsgs] = useState<{ text: string; from: 'bot' | 'user' }[]>([{ text: '¡Hola 👋! Soy el asistente de Axon 5. ¿En qué puedo ayudarte?', from: 'bot' }]);
+  const [msgs, setMsgs] = useState<{ text: string; from: 'bot' | 'user' }[]>([{ text: '¡Hola! Soy el asistente de Axon 5. ¿En qué puedo ayudarte?', from: 'bot' }]);
   const [input, setInput] = useState('');
   const [typing, setTyping] = useState(false);
   const [showQuick, setShowQuick] = useState(true);
@@ -309,7 +316,7 @@ function Chat() {
 }
 
 /* ─── FLOATING NEURAL NETWORK (CANVAS) ──────────────────── */
-function NeuralNetwork() {
+export function NeuralNetwork() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -440,8 +447,66 @@ function UptimeDots() {
   );
 }
 
-/* ─── MAIN APP ──────────────────────────────────────────── */
-export default function App() {
+/* ─── PRELOADER ─────────────────────────────────────────── */
+function Preloader({ onComplete }: { onComplete: () => void }) {
+  useEffect(() => {
+    const timer = setTimeout(onComplete, 2200);
+    return () => clearTimeout(timer);
+  }, [onComplete]);
+
+  return (
+    <motion.div
+      className="preloader-overlay"
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.6, ease: 'easeInOut' }}
+    >
+      <div className="preloader-inner">
+        <motion.div
+          className="preloader-logo"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+        >
+          <svg width="48" height="48" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="36" height="36" rx="10" fill="url(#brand-grad-pre)" />
+            <path d="M12 18L18 12L24 18M18 12V24" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="12" cy="18" r="2.5" fill="white" />
+            <circle cx="24" cy="18" r="2.5" fill="white" />
+            <circle cx="18" cy="12" r="2.5" fill="white" />
+            <defs>
+              <linearGradient id="brand-grad-pre" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#4ade80" />
+                <stop offset="1" stopColor="#16a34a" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </motion.div>
+        
+        <motion.div 
+          className="preloader-text"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
+        >
+          Axon 5
+        </motion.div>
+
+        <div className="preloader-bar-bg">
+          <motion.div
+            className="preloader-bar-fill"
+            initial={{ width: 0 }}
+            animate={{ width: '100%' }}
+            transition={{ duration: 1.8, ease: 'easeInOut' }}
+          />
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ─── EXPERT LANDING ────────────────────────────────────── */
+export function ExpertLanding({ onSwitchView }: { onSwitchView: () => void }) {
   const { scrollYProgress } = useScroll();
 
   // Nav solid on scroll
@@ -529,12 +594,16 @@ export default function App() {
           <a href="#" className="nav-txt" onClick={e => e.preventDefault()}>Docs</a>
           <a href="#" className="nav-txt" onClick={e => e.preventDefault()}>Login</a>
           
-          <button className="theme-btn" onClick={toggleTheme} aria-label="Toggle Theme">
+          <button className="theme-btn" onClick={toggleTheme} aria-label="Toggle Theme" style={{ marginLeft: 8 }}>
             {theme === 'dark' ? (
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
             ) : (
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             )}
+          </button>
+
+          <button className="nav-txt" onClick={onSwitchView} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0 8px', textDecoration: 'underline' }}>
+             Ver versión Empresa
           </button>
 
           <button className="btn-cta" onClick={() => document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' })}>Empezar gratis</button>
@@ -556,6 +625,9 @@ export default function App() {
           ))}
           <a href="#" onClick={(e) => { e.preventDefault(); setMobileOpen(false); }}>Docs</a>
           <a href="#" onClick={(e) => { e.preventDefault(); setMobileOpen(false); }}>Login</a>
+          <button onClick={() => { setMobileOpen(false); onSwitchView(); }} style={{ background: 'none', border: 'none', color: 'var(--text)', textAlign: 'left', padding: '16px', fontSize: '1.2rem', fontWeight: '500', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+             Ver versión Empresa →
+          </button>
         </motion.div>
       )}
 
@@ -862,50 +934,119 @@ export default function App() {
       </section>
 
       {/* FOOTER */}
-      <footer>
-        <div className="ft-in">
-          <div className="ft-top">
-            <div className="ft-brand">
-              <a href="#" className="nav-brand" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-                <svg width="26" height="26" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="36" height="36" rx="10" fill="url(#brand-grad-ft)" />
-                  <path d="M12 18L18 12L24 18M18 12V24" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                  <circle cx="12" cy="18" r="2.5" fill="white" />
-                  <circle cx="24" cy="18" r="2.5" fill="white" />
-                  <circle cx="18" cy="12" r="2.5" fill="white" />
-                  <defs>
-                    <linearGradient id="brand-grad-ft" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-                      <stop stopColor="#4ade80" />
-                      <stop offset="1" stopColor="#16a34a" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <span className="nav-brand-name">Axon 5</span>
-              </a>
-              <p>Agentes de IA autónomos para equipos modernos. Automatiza, escala y crece sin límites.</p>
-              <div className="ft-soc">
-                {['T', 'G', 'L'].map(s => (
-                  <a key={s} href="#" className="soc" onClick={e => e.preventDefault()}>
-                    {s === 'T' && <svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" /></svg>}
-                    {s === 'G' && <svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>}
-                    {s === 'L' && <svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>}
-                  </a>
-                ))}
-              </div>
-            </div>
-            <div className="fc"><h5>Producto</h5><ul>{['Features', 'Integraciones', 'Pricing', 'Changelog', 'Roadmap'].map(l => <li key={l}><a href="#" onClick={e => e.preventDefault()}>{l}</a></li>)}</ul></div>
-            <div className="fc"><h5>Empresa</h5><ul>{['Nosotros', 'Blog', 'Careers', 'Prensa', 'Contacto'].map(l => <li key={l}><a href="#" onClick={e => e.preventDefault()}>{l}</a></li>)}</ul></div>
-            <div className="fc"><h5>Recursos</h5><ul>{['Documentación', 'API Reference', 'Comunidad', 'Status', 'Security'].map(l => <li key={l}><a href="#" onClick={e => e.preventDefault()}>{l}</a></li>)}</ul></div>
-          </div>
-          <div className="ft-bot">
-            <p>© 2026 Axon 5, Inc. Todos los derechos reservados.</p>
-            <div className="ft-leg">{['Privacidad', 'Términos', 'Cookies'].map(l => <a key={l} href="#" onClick={e => e.preventDefault()}>{l}</a>)}</div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       {/* CHAT */}
       <Chat />
     </div>
+  );
+}
+
+/* ─── SHARED COMPONENTS ───────────────────────────────────── */
+export function Footer() {
+  return (
+    <footer>
+      <div className="ft-in">
+        <div className="ft-top">
+          <div className="ft-brand">
+            <a href="#" className="nav-brand" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+              <svg width="26" height="26" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="36" height="36" rx="10" fill="url(#brand-grad-ft)" />
+                <path d="M12 18L18 12L24 18M18 12V24" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="12" cy="18" r="2.5" fill="white" />
+                <circle cx="24" cy="18" r="2.5" fill="white" />
+                <circle cx="18" cy="12" r="2.5" fill="white" />
+                <defs>
+                  <linearGradient id="brand-grad-ft" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#4ade80" />
+                    <stop offset="1" stopColor="#16a34a" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <span className="nav-brand-name">Axon 5</span>
+            </a>
+            <p>Agentes de IA autónomos para equipos modernos. Automatiza, escala y crece sin límites.</p>
+            <div className="ft-soc">
+              {['T', 'G', 'L'].map(s => (
+                <a key={s} href="#" className="soc" onClick={e => e.preventDefault()}>
+                  {s === 'T' && <svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" /></svg>}
+                  {s === 'G' && <svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" /></svg>}
+                  {s === 'L' && <svg width="11" height="11" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>}
+                </a>
+              ))}
+            </div>
+          </div>
+          <div className="fc"><h5>Producto</h5><ul>{['Features', 'Integraciones', 'Pricing', 'Changelog', 'Roadmap'].map(l => <li key={l}><a href="#" onClick={e => e.preventDefault()}>{l}</a></li>)}</ul></div>
+          <div className="fc"><h5>Empresa</h5><ul>{['Nosotros', 'Blog', 'Careers', 'Prensa', 'Contacto'].map(l => <li key={l}><a href="#" onClick={e => e.preventDefault()}>{l}</a></li>)}</ul></div>
+          <div className="fc"><h5>Recursos</h5><ul>{['Documentación', 'API Reference', 'Comunidad', 'Status', 'Security'].map(l => <li key={l}><a href="#" onClick={e => e.preventDefault()}>{l}</a></li>)}</ul></div>
+        </div>
+        <div className="ft-bot">
+          <p>© 2026 Axon 5, Inc. Todos los derechos reservados.</p>
+          <div className="ft-leg">{['Privacidad', 'Términos', 'Cookies'].map(l => <a key={l} href="#" onClick={e => e.preventDefault()}>{l}</a>)}</div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+/* ─── APP ROUTER ────────────────────────────────────────── */
+export default function App() {
+  const [loading, setLoading] = useState(true);
+  const [audience, setAudience] = useState<'expert' | 'business' | null>(
+    (localStorage.getItem('axon-audience') as any) || null
+  );
+
+  const handleSelect = (choice: 'expert' | 'business') => {
+    setAudience(choice);
+    localStorage.setItem('axon-audience', choice);
+  };
+
+  return (
+    <>
+      <AnimatePresence>
+        {loading && <Preloader onComplete={() => setLoading(false)} />}
+      </AnimatePresence>
+
+      {!loading && audience === null && (
+        <div className="audience-wrapper">
+          <NeuralNetwork />
+          <motion.div 
+            className="aud-modal"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="aud-badge">Bienvenido a Axon 5</div>
+            <h2>¿Qué tanto conoces sobre IA?</h2>
+            <p>Selecciona tu perfil para personalizar nuestra plataforma a tus necesidades.</p>
+            
+            <div className="aud-grid">
+              <button className="aud-card" onClick={() => handleSelect('expert')}>
+                <div className="aud-icn">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                </div>
+                <div className="aud-info">
+                  <h3>Soy conocedor / Técnico</h3>
+                  <span>Busco explorar APIs, agentes de IA, rendimiento y escalabilidad (P99, SLA, etc).</span>
+                </div>
+              </button>
+              
+              <button className="aud-card" onClick={() => handleSelect('business')}>
+                <div className="aud-icn">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                </div>
+                <div className="aud-info">
+                  <h3>Tengo una empresa</h3>
+                  <span>Quiero ver cómo la IA me ayuda a vender, atender clientes y optimizar operaciones en WhatsApp.</span>
+                </div>
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {audience === 'expert' && <ExpertLanding onSwitchView={() => handleSelect('business')} />}
+      {audience === 'business' && <BusinessLanding onSwitchView={() => handleSelect('expert')} />}
+    </>
   );
 }
