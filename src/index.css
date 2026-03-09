@@ -258,7 +258,7 @@ body::after {
         display: flex;
         margin-left: 8px;
     }
-    
+
     .nav-r {
         margin-left: auto;
     }
@@ -444,7 +444,7 @@ body::after {
     border: 1px solid var(--border);
     font-family: var(--mono);
     font-size: .8rem;
-    color: #999;
+    color: var(--muted2);
     margin-bottom: 34px;
     cursor: pointer;
     transition: border-color .2s, transform .2s;
@@ -729,7 +729,7 @@ body::after {
     font-weight: 800;
     line-height: 1.12;
     letter-spacing: -.03em;
-    color: #fff;
+    color: var(--text);
     margin-bottom: 14px;
 }
 
@@ -885,7 +885,7 @@ body::after {
     font-family: var(--mono);
     font-size: .78rem;
     line-height: 2;
-    color: #ccc;
+    color: var(--text);
 }
 
 .tc {
@@ -1197,7 +1197,7 @@ body::after {
         grid-column: 1 / 3;
         grid-row: 2;
     }
-    
+
     .bc3 {
         grid-column: 1 / 3;
         grid-row: 3;
@@ -1215,7 +1215,12 @@ body::after {
 }
 
 @media(max-width:520px) {
-    .bc1, .bc2, .bc3, .bc4, .bc5 {
+
+    .bc1,
+    .bc2,
+    .bc3,
+    .bc4,
+    .bc5 {
         grid-column: 1 !important;
         grid-row: auto !important;
     }
@@ -1664,7 +1669,7 @@ footer {
 .cnm {
     font-size: .82rem;
     font-weight: 600;
-    color: #fff;
+    color: var(--text);
 }
 
 .cst {
